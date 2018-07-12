@@ -7,51 +7,41 @@
 	})
 	
 	function parseData(colors){
-		var parseColor = [];
-
-		var thenum = colors.match(/\d|,/g);
-		thenum.push(",")
-
-		var num = [];
-		var str = "";
-		var caseNum = 0;
-		thenum.forEach(function(val,i){
-			if (val === ","){
-				var x = parseInt(str) / 255;
-				switch(caseNum){
-					case 0:
-
-						num[0] = x;
-						str = "";
-					break;
-					case 1:
-						num[1] = x;
-						str = "";
-					break;
-					case 2:
-						num[2] = x;
-						parseColor.push(num);
-					break;
-				}
-				caseNum++;
-			}else{
-				str += val
-			}
+		var color = 0;
+		if(colors.charAt(0) == "#"){
+			color = convertToRGB(colors);
+		}else{
+			var thenum = colors.match(/\d|,/g);
+			console.log(thenum);
+			color = thenum.join("").split(",");
+			//push comma so loop can add last value to array;
+			console.log(colors)
 			
-		});
-		let darkness = calculateDarkness(num);
-		return [num,darkness];
+		}
+		let darkness = calculateDarkness(color);
+		return [color,darkness];
 	}
 	
 	
 	function calculateDarkness(color){
+		//convert each array value into a value between 0 and 10;
 		var roundedArr = []
 		for(var i = 0; i < color.length; i++){
-			round = Math.round((color[i] * 255) / 25);
+			round = Math.round((color[i]) / 25);
 			roundedArr.push(round);
 			
 		}
-		var scalar = Math.floor(roundedArr.reduce((a,b) => a + b) / 3);
-		return scalar;
+		// get and return single mean value from the array;
+		return Math.floor(roundedArr.reduce((a,b) => a + b) / 3);
+	}
+	
+	function convertToRGB(color){
+		var hex = color.substr(1);
+		var regex = hex.match(/(.{2})/g)
+		var values = []
+		regex.forEach(function(val,i){
+			values.push(parseInt(val,16))
+		});
+		return values;
 	}
 })();
