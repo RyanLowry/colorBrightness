@@ -1,19 +1,40 @@
 
 
 function getLightness(colors,simple){
-	//convert rgb/hex into an array
+	//convert rgb/hex into an array if not already
 	var color = [];
-	if(colors.charAt(0) == "#"){
-		color = convertToRGB(colors);
-	}else{
-		//find digits and commas
-		var thenum = colors.match(/\d|,/g);
-		//join to properly split into an array
-		color = thenum.join("").split(",");
+	switch(typeof colors){
+		case "string":
+			if(colors.charAt(0) == "#"){
+				color = convertToRGB(colors);
+			}else{
+				//find digits and commas
+				var thenum = colors.match(/\d|,/g);
+				//join to properly split into an array
+				color = thenum.join("").split(",");
+			}
+		break;
+		case "object":
+			color = colors;
+		break;
 	}
-	let darkness = calculateLightness(color,simple);
+	
+	//convert each array value into a value between 0 and 100;
+	var roundedArr = []
+	for(var i = 0; i < color.length; i++){
+		round = Math.round((color[i]) / 5.1);
+		if (simple == true){
+			round = Math.round(round / 10);
+		}
+		roundedArr.push(round);
+		
+	}
+
+	// get and return single mean value from the array, along with seperate calculated values;
+	var lightness = [Math.min(roundedArr[0]) + Math.max(roundedArr[2]),roundedArr];
+	
 	//return both color and darkness for convenience
-	return [darkness,color];
+	return [lightness,color];
 }
 
 function convertToRGB(color){
@@ -29,22 +50,5 @@ function convertToRGB(color){
 	return values;
 }
 
-function calculateLightness(color,simple){
-	//convert each array value into a value between 0 and 10;
-	var roundedArr = []
-	for(var i = 0; i < color.length; i++){
-		//gets a value between 0 and 100
-		round = Math.floor((color[i]) / 5.1);
-		if (simple == true){
-			round = Math.round(round / 10);
-		}
-		
-		roundedArr.push(round);
-		
-	}
-
-	// get and return single mean value from the array, along with seperate calculated values;
-	return [Math.min(roundedArr[0]) + Math.max(roundedArr[2]),roundedArr];
-}
 
 
