@@ -1,3 +1,5 @@
+
+
 function getLightness(colors,simple){
 	//convert rgb/hex into an array
 	var color = [];
@@ -9,7 +11,7 @@ function getLightness(colors,simple){
 		//join to properly split into an array
 		color = thenum.join("").split(",");
 	}
-	let darkness = calculateIntensity(color,simple);
+	let darkness = calculateLightness(color,simple);
 	//return both color and darkness for convenience
 	return [darkness,color];
 }
@@ -31,20 +33,18 @@ function calculateLightness(color,simple){
 	//convert each array value into a value between 0 and 10;
 	var roundedArr = []
 	for(var i = 0; i < color.length; i++){
-		var round = 0;
+		//gets a value between 0 and 100
+		round = Math.floor((color[i]) / 5.1);
 		if (simple == true){
-			//gets a value between 0 and 10
-			round = Math.round((color[i]) / 25);
-		}else{
-			//gets a value between 0 and 100, currently appx. 5 off real value
-			round = Math.round((color[i]) / 2.55);
+			round = Math.round(round / 10);
 		}
 		
 		roundedArr.push(round);
 		
 	}
+
 	// get and return single mean value from the array, along with seperate calculated values;
-	return [Math.floor(roundedArr.reduce((a,b) => a + b) / 3),roundedArr];
+	return [Math.min(roundedArr[0]) + Math.max(roundedArr[2]),roundedArr];
 }
 
 
