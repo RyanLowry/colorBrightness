@@ -1,5 +1,3 @@
-
-
 function getLightness(colors,simple){
 	//convert rgb/hex into an array if not already
 	var color = [];
@@ -18,21 +16,18 @@ function getLightness(colors,simple){
 			color = colors;
 		break;
 	}
-	
 	//convert each array value into a value between 0 and 100;
 	var roundedArr = []
 	for(var i = 0; i < color.length; i++){
 		round = Math.round((color[i]) / 5.1);
 		if (simple == true){
-			round = Math.round(round / 10);
+			round = round / 10;
 		}
 		roundedArr.push(round);
 		
 	}
-
-	// get and return single mean value from the array, along with seperate calculated values;
-	var lightness = [Math.min(roundedArr[0]) + Math.max(roundedArr[2]),roundedArr];
-	
+	// get single mean value from the array, along with seperate calculated values;
+	var lightness = [Math.round(Math.min(roundedArr[0]) + Math.max(roundedArr[2])),roundedArr];
 	//return both color and darkness for convenience
 	return [lightness,color];
 }
